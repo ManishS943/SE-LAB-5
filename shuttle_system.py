@@ -12,11 +12,13 @@ ROUTES = {
 MIN_CAPACITY = 10
 DRIVERS = ("Prakash", "Leela", "Imran", "Tom")
 
+
 def get_route(route_id):
     """Return a route, raising ValueError for an unknown or invalid ID."""
     if not isinstance(route_id, str) or route_id not in ROUTES:
         raise ValueError(f"Unknown route: {route_id!r}")
     return ROUTES[route_id]
+
 
 def add_trip_log(route_id, passenger_count, logs=None):
     """Log a non-negative integer count without sharing default log lists."""
@@ -32,15 +34,18 @@ def add_trip_log(route_id, passenger_count, logs=None):
     logs.append(f"{datetime.now()}: {route_id} carried {passenger_count}")
     return logs
 
+
 def remove_route(route_id):
     """Remove a known route; report an unknown route with ValueError."""
     get_route(route_id)
     del ROUTES[route_id]
 
+
 def average_load(route_id):
     """Return the mean load, or 0.0 when a known route has no trips."""
     trips = get_route(route_id)["trips"]
     return sum(trips) / len(trips) if trips else 0.0
+
 
 def underused_routes():
     """Return routes with observed trips and mean load below MIN_CAPACITY."""
@@ -49,10 +54,12 @@ def underused_routes():
         if route["trips"] and average_load(route_id) < MIN_CAPACITY
     ]
 
+
 def assign_driver(route_id):
     """Validate the route and choose a driver using system randomness."""
     get_route(route_id)
     return secrets.choice(DRIVERS)
+
 
 def sync_fleet_data(file_path="fleet.json"):
     """Write/read a UTF-8 JSON snapshot while preserving the ROUTES object.
@@ -66,6 +73,7 @@ def sync_fleet_data(file_path="fleet.json"):
         snapshot = json.load(fleet_file)
     ROUTES.clear()
     ROUTES.update(snapshot)
+
 
 def main():
     """Run a short demo and handle invalid trip data and route lookup."""
@@ -96,6 +104,7 @@ def main():
     except ValueError as error:
         print(error)
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
